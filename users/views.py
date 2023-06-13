@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Message
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 from .utils import searchProfiles, paginateProfiles
 
@@ -15,7 +15,7 @@ def loginUser(request):
         return redirect('profiles')
 
     if request.method == 'POST':
-        username = request.POST['username']
+        username = request.POST['username'].lower()
         password = request.POST['password']
 
         if User.objects.filter(username=username).exists():
@@ -34,7 +34,8 @@ def loginUser(request):
                 table and a session data will be added in the browser
                 """
                 login(request, user)
-                return redirect('profiles')
+                # Get the next value in the url if the next keyword exist with project value else redirect it to the account page
+                return redirect(request.GET['next'] if 'next' in request.GET else 'account')
             else:
                 messages.error(request, 'Username OR password is incorrect')
         else:
@@ -167,3 +168,20 @@ def deleteSkill(request, pk):
 
     context = {'object': skill}
     return render(request, 'delete_template.html', context)
+
+
+@login_required(login_url='login')
+def inbox(request):
+    profile = request.user.profile
+    messageRequests = profile.messages.all()
+    unreadCount = messageRequests.filter(is_read=False).count()
+    context = {'messageRequests': messageRequests, 'unreadCount': unreadCount}
+    return render(request, 'users/inbox.html', context)
+
+
+@login_required(login_url='login')
+def viewMessage(request, pk):
+    profile = request.user.profile
+    message = profile.messages.get(id=pk)
+    context = {'message': message}
+    return render(request, 'users/message.html', context)

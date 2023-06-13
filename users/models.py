@@ -43,3 +43,37 @@ class Skill(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+
+class Message(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, unique=True,
+                          primary_key=True, editable=False)
+    sender = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
+    # The attribute "related_name" will connect to the Profile class
+    recipient = models.ForeignKey(
+        Profile, on_delete=models.SET_NULL, null=True, blank=True, related_name="messages")
+    name = models.CharField(max_length=200, null=True, blank=True)
+    email = models.EmailField(max_length=200, null=True, blank=True)
+    subject = models.CharField(max_length=200, null=True, blank=True)
+    body = models.TextField()
+    is_read = models.BooleanField(default=False, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.subject
+
+    class Meta:
+        ordering = ['is_read', '-created']
+
+# class User(models.Model):
+    #     id = models.UUIDField(default=uuid.uuid4, unique=True,
+#                           primary_key=True, editable=False)
+#     username = models.CharField(max_length=200)
+#     email = models.EmailField(max_length=200)
+#     first_name = models.CharField(max_length=200)
+#     last_name = models.CharField(max_length=200)
+#     is_staff = models.BooleanField(default=False)
+#     is_active = models.BooleanField(default=False)
+
+#     def __str__(self):
+#         return self.username

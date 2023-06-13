@@ -2,34 +2,6 @@ from django.db import models
 import uuid
 from users.models import Profile
 
-# class User(models.Model):
-#     id = models.UUIDField(default=uuid.uuid4, unique=True,
-#                           primary_key=True, editable=False)
-#     username = models.CharField(max_length=200)
-#     email = models.EmailField(max_length=200)
-#     first_name = models.CharField(max_length=200)
-#     last_name = models.CharField(max_length=200)
-#     is_staff = models.BooleanField(default=False)
-#     is_active = models.BooleanField(default=False)
-
-#     def __str__(self):
-#         return self.username
-
-
-# class Message(models.Model):
-#     id = models.UUIDField(default=uuid.uuid4, unique=True,
-#                           primary_key=True, editable=False)
-#     sender = models.CharField(max_length=200)
-#     recipient = models.CharField(max_length=200)
-#     name = models.CharField(max_length=200)
-#     email = models.EmailField(max_length=200)
-#     subject = models.CharField(max_length=200)
-#     body = models.TextField()
-#     is_read = models.BooleanField(default=False)
-#     created = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return self.sender
 
 class Project(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True,
@@ -54,7 +26,27 @@ class Project(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['created']
+        ordering = ['-vote_ratio', '-vote_total', 'title']
+
+    @property
+    def reviewers(self):
+        """
+        Get all the reviewers id & return it as a list.
+        The "flat=True" attribute will convert the object into list.
+        """
+        queryset = self.review_set.all().values_list('owner__id', flat=True)
+        return queryset
+
+    @property
+    def getVoteCount(self):
+        reviews = self.review_set.all()
+        upVotes = reviews.filter(value='up').count()
+        totalVotes = reviews.count()
+
+        ratio = (upVotes / totalVotes) * 100
+        self.vote_total = totalVotes
+        self.vote_ratio = ratio
+        self.save()
 
 
 class Review(models.Model):
@@ -64,11 +56,14 @@ class Review(models.Model):
     )
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    # owner = models.ForeignKey()
     body = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
     created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [['owner', 'project']]
 
     def __str__(self):
         return self.value
