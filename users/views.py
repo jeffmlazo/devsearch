@@ -190,7 +190,6 @@ def viewMessage(request, pk):
     return render(request, 'users/message.html', context)
 
 
-# FIXME: It replaces the first name of the user in profile or user after sending a message if you're not logged in
 def createMessage(request, pk):
     recipient = Profile.objects.get(id=pk)
     form = MessageForm()
