@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     'livereload',
     'rest_framework',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -95,6 +96,7 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -131,6 +133,17 @@ WSGI_APPLICATION = "devsearch.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "devsearch",
+#         "USER": "postgres",
+#         "PASSWORD": "SECRETPASS",
+#         "HOST": "localhost",
+#         "PORT": "5432",
+#     }
+# }
 
 DATABASES = {
     "default": {
@@ -169,6 +182,8 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Email variable setups
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

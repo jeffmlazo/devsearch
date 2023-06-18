@@ -8,7 +8,7 @@ class Project(models.Model):
                           primary_key=True, editable=False)
     # Many to One Relationship for the Profile
     owner = models.ForeignKey(
-        Profile, null=True, blank=True, on_delete=models.SET_NULL)
+        Profile, null=True, blank=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     featured_image = models.ImageField(
@@ -20,13 +20,21 @@ class Project(models.Model):
     vote_ratio = models.IntegerField(default=0, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    """This will fix the proper character for the Title in the database"""
-
+    # This will fix the proper character for the Title in the database
     def __str__(self):
         return self.title
 
     class Meta:
         ordering = ['-vote_ratio', '-vote_total', 'title']
+
+    @property
+    def imageURL(self):
+        # Add try catch  if the default image have been deleted
+        try:
+            url = self.featured_image.url
+        except:
+            url = ''
+        return url
 
     @property
     def reviewers(self):

@@ -48,8 +48,12 @@ def updateUser(sender, instance, created, **kwargs):
 
 # @receiver(post_delete, sender=Profile)
 def deleteUser(sender, instance, **kwargs):
-    user = instance.user
-    user.delete()
+    # Add try catch here with pass to delete the user in the user table
+    try:
+        user = instance.user
+        user.delete()
+    except:
+        pass
 
 
 post_save.connect(createProfile, sender=User)
