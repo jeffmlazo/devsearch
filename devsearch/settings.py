@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 
     "projects.apps.ProjectsConfig",
     "users.apps.UsersConfig",
-    'livereload',
+    # 'livereload',
     'rest_framework',
     'corsheaders',
     'storages',
