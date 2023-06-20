@@ -31,7 +31,8 @@ SECRET_KEY = "django-insecure-sv=ofd%+o*@f(86w$ivmqj3mx)5cg6tqgrj8*!p_kd34x&gjl8
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1',
+                 'devsearch-heroku-one-1ee7829d43d1.herokuapp.com']
 
 
 # Application definition
@@ -237,3 +238,6 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_IAM_ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_IAM_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_S3_BUCKET_NAME')
+
+if os.getcwd() == '/app':
+    DEBUG = False
