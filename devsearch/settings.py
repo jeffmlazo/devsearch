@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
 import os
-# from dotenv import load_dotenv
-# dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-# load_dotenv(dotenv_path)
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -139,41 +139,17 @@ WSGI_APPLICATION = "devsearch.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     # Live database server settings
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": os.environ.get('DB_NAME'),
-#         "USER": os.environ.get('DB_USER'),
-#         "PASSWORD": os.environ.get('DB_PASSWORD'),
-#         "HOST": os.environ.get('DB_HOST'),
-#         "PORT": os.environ.get('DB_PORT'),
-#     }
-# }
-
 DATABASES = {
     # Live database server settings
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv('DB_NAME'),
-        "USER": os.getenv('DB_USER'),
-        "PASSWORD": os.getenv('DB_PASSWORD'),
-        "HOST": os.getenv('DB_HOST'),
-        "PORT": os.getenv('DB_PORT'),
+        "NAME": os.environ.get('DB_NAME'),
+        "USER": os.environ.get('DB_USER'),
+        "PASSWORD": os.environ.get('DB_PASSWORD'),
+        "HOST": os.environ.get('DB_HOST'),
+        "PORT": os.environ.get('DB_PORT'),
     }
 }
-
-# DATABASES = {
-#     # Live database server settings
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "devsearchdb1",
-#         "USER": "devsearchjeprox",
-#         "PASSWORD": "j3pr0xd3vs3arch",
-#         "HOST": "devsearchdb1.crgca6wyzuey.eu-north-1.rds.amazonaws.com",
-#         "PORT": 5432,
-#     }
-# }
 
 # DATABASES = {
 #     "default": {
